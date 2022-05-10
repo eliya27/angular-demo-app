@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: angular-web-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: angular-web-app
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5 
+  template:
+    metadata:
+      labels:
+        app: angular-web-app
+    spec:
+      nodeSelector:
+        "beta.kubernetes.io/os": linux
+      containers:
+      - name: angular-web-app
+        image: eliyareg2.azurecr.io/angular-app-jenkins/angular-web-app:latest
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: 250m
+          limits:
+            cpu: 500m
+      
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: angular-web-app
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: angular-web-app
