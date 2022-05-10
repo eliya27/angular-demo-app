@@ -53,6 +53,20 @@ pipeline {
             }
                                
         }
+        stage('Container Deployment'){
+                              
+             steps {
+                              echo "Start kubernetes deployment"
+                           script{
+                                kubernetesDeploy(
+                                             configs: 'manifest.yaml',
+                                             kubeconfigId: 'K8S2',
+                                             enableConfigSubstitution: false
+                          )
+                   }
+                              echo "Finish kubernetes deployment"
+              }
+       }
         
       
    
